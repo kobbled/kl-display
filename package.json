@@ -1,0 +1,22 @@
+{
+  "manver" : "1",
+  "project" : "display",
+  "description" : "",
+  "version" : "0.0.1",
+  "license" : "Apache 2.0",
+  "author" : "",
+  "source" : [
+    "src/display.kl"
+  ],
+  "tests" : [
+    "src/test/test_display.kl"
+  ],
+  "includes" : [
+    "include"
+  ],
+  "depends" : [
+    "errors",
+    "Strings",
+    "KUnit"
+  ]
+}

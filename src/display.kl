@@ -1,0 +1,141 @@
+PROGRAM display
+%NOLOCKGROUP
+
+%INCLUDE display.klt
+--karel utility
+%INCLUDE klrdutil.kl
+
+%INCLUDE errors.klh
+%INCLUDE strings.klh
+%INCLUDE display.klh
+%INCLUDE display.private.klh
+
+BEGIN
+END display
+
+--### Private #####
+
+ROUTINE msgclass
+BEGIN
+  -- determine classification of message
+  SELECT severity OF
+    CASE(0):
+        color = C_WARN
+        prefix = LBL_WARN
+    CASE(1):
+        color = C_ERR
+        prefix = LBL_ERR
+    CASE(2):
+        color = C_DEBUG
+        prefix = LBL_DEBUG
+    CASE(3):
+        color = C_INFO
+        prefix = LBL_INFO
+    ELSE:
+        karelError('severity not set correctly', ER_ABORT)
+  ENDSELECT
+
+END msgclass
+
+ROUTINE printTime
+VAR
+  tme   : INTEGER
+  sec : INTEGER
+  str    : STRING[30]
+  secstr : STRING[4]
+BEGIN
+    GET_TIME(tme)
+	CNV_TIME_STR(tme,str)
+    str = rstrip(str)
+    --get seconds
+    sec = tme AND 31
+    sec = sec * 2
+    
+    -- add to string
+    secstr = i_to_s(sec)
+    IF sec < 10 THEN
+        secstr = '0' + secstr
+    ENDIF
+    str = str + ':' + secstr
+
+    --add seconds
+    
+    RETURN(str)
+END printTime
+
+
+
+--### Public #####
+
+--clear User display
+ROUTINE clearUser
+VAR
+	status : INTEGER
+    prog_int : INTEGER
+BEGIN
+	-- from klrdutil
+	clear_win(TPDISPLAY, status)
+	CHK_STAT(status)
+	-- Not sure if nessecary to clear user
+	-- FORCE_SPMENU(TP_PANEL, SPI_TPUSER, 1)
+END clearUser
+
+ROUTINE showUser
+BEGIN
+    FORCE_SPMENU(TP_PANEL, SPI_TPUSER, 1)
+END showUser
+
+--set severity
+ROUTINE set_severity
+BEGIN
+    severity = sev_no
+    -- determine classification of message
+    msgclass
+END set_severity
+
+-- print error
+ROUTINE disp_msg
+VAR
+    s : INTEGER
+BEGIN
+  --handle unitialized variables
+  IF UNINIT(severity) THEN
+    set_severity(WARN)
+  ENDIF
+
+  --get time
+  disp_time
+
+  -- display message
+  WRITE TPDISPLAY(
+      CHR(cc_bgcolor), CHR(color),
+      prefix,
+      CHR(cc_bgcolor), CHR(cc_dfcolor),
+      msg,
+      CR)
+END disp_msg
+
+
+--print string
+ROUTINE disp_str
+BEGIN
+    WRITE TPDISPLAY(u_str, CR)
+END disp_str
+
+--print integer
+ROUTINE disp_int
+BEGIN
+    WRITE TPDISPLAY(u_i, CR)
+END disp_int
+
+--print real
+ROUTINE disp_real
+BEGIN
+    WRITE TPDISPLAY(u_r, CR)
+END disp_real
+
+--print time
+ROUTINE disp_time
+BEGIN
+    WRITE TPDISPLAY(printTime, CR)
+END disp_time

@@ -1,0 +1,14 @@
+%ifndef display_h
+%define display_h
+
+-- user panel
+ROUTINE clearUser FROM display
+ROUTINE showUser FROM display
+ROUTINE set_severity(sev_no : INTEGER) FROM display
+ROUTINE disp_msg(msg : STRING) FROM display
+ROUTINE disp_str(u_str : STRING) FROM display
+ROUTINE disp_int( u_i : INTEGER) FROM display
+ROUTINE disp_real( u_r : REAL) FROM display
+ROUTINE disp_time FROM display
+
+%endif --display_h

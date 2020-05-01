@@ -1,0 +1,26 @@
+PROGRAM test_display
+%NOLOCKGROUP
+
+%INCLUDE display.c.klt
+
+%INCLUDE display.klh
+%INCLUDE kunit.klh
+
+ROUTINE t_message : BOOLEAN
+VAR
+  entry : INTEGER
+  status : INTEGER
+BEGIN
+  clearUser
+  set_severity(WARN)
+  disp_msg('This is a error message')
+  set_severity(DEBUG)
+  disp_msg('This is a debug message')
+  RETURN(TRUE)
+END t_message
+
+BEGIN
+  kunit_test('test_message()', t_message)
+
+  kunit_done
+END test_display

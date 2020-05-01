@@ -1,0 +1,16 @@
+%ifndef display_t
+%define display_t
+
+%INCLUDE display.c.klt
+
+%define max_string_length 30
+
+VAR
+  -- 0 = warn, 1 = err, 2 = debug, 3 = info
+  severity,
+  color : INTEGER
+  prefix : STRING[5]
+  F1_press,
+  F2_press : BOOLEAN
+
+%endif --display_t
