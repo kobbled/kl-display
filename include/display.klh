@@ -1,14 +1,51 @@
 %ifndef display_h
 %define display_h
 
+%include namespace.m
+
+%define prog_name display
+%define prog_name_alias dspl
+
+-- namespaced members in format <prog_name_alias>__<func_name>
+declare(prog_name,date,prog_name_alias,date)
+declare(prog_name,show_date,prog_name_alias,shw_dte)
+declare(prog_name,time,prog_name_alias,time)
+declare(prog_name,set_severity,prog_name_alias,setSev)
+declare(prog_name,clear,prog_name_alias,clear)
+declare(prog_name,show,prog_name_alias,show)
+declare(prog_name,debug,prog_name_alias,debug)
+declare(prog_name,info,prog_name_alias,info)
+declare(prog_name,set_message,prog_name_alias,set_msg)
+declare(prog_name,get_message,prog_name_alias,get_msg)
+declare(prog_name,print,prog_name_alias,print)
+declare(prog_name,string_reg,prog_name_alias,strreg)
+declare(prog_name,register,prog_name_alias,regist)
+declare(prog_name,posreg,prog_name_alias,posreg)
+declare(prog_name,io,prog_name_alias,io)
+
+ROUTINE display__date : STRING FROM display
+ROUTINE display__show_date(shw : BOOLEAN) FROM display
+ROUTINE display__time : STRING FROM display
+-- severity : 0 = WARN, 1 = ERR, 2 = DEBUG
+ROUTINE display__set_severity(sev_no : INTEGER) FROM display
 -- user panel
-ROUTINE clearUser FROM display
-ROUTINE showUser FROM display
-ROUTINE set_severity(sev_no : INTEGER) FROM display
-ROUTINE disp_msg(msg : STRING) FROM display
-ROUTINE disp_str(u_str : STRING) FROM display
-ROUTINE disp_int( u_i : INTEGER) FROM display
-ROUTINE disp_real( u_r : REAL) FROM display
-ROUTINE disp_time FROM display
+ROUTINE display__clear FROM display
+ROUTINE display__show FROM display
+ROUTINE display__debug(shw : BOOLEAN) FROM display
+ROUTINE display__info(shw : BOOLEAN) FROM display
+ROUTINE display__set_message(msg : STRING) FROM display
+ROUTINE display__get_message : STRING FROM display
+ROUTINE display__print FROM display
+-- display registers
+ROUTINE display__string_reg(reg_no : INTEGER) : STRING FROM display
+ROUTINE display__register(reg_no : INTEGER) : STRING FROM display
+ROUTINE display__posreg(reg_no, grp_no : INTEGER) : STRING FROM display
+ROUTINE display__io(typ : STRING; reg_no : INTEGER) : STRING FROM display
+
+
+--FROM REGISTERS
+declare(registers,get_io,regst,getio)
+ROUTINE registers__get_io(typ : STRING; port_no : INTEGER) : INTEGER FROM registers
+
 
 %endif --display_h

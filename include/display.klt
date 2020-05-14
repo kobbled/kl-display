@@ -10,6 +10,9 @@ VAR
   severity,
   color : INTEGER
   prefix : STRING[5]
+  message : STRING[254]
+  show_date,
+  show_debug, show_info : BOOLEAN
   F1_press,
   F2_press : BOOLEAN
 

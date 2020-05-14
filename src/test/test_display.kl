@@ -1,26 +1,133 @@
 PROGRAM test_display
 %NOLOCKGROUP
 
-%INCLUDE display.c.klt
+%include display.c.klt
 
-%INCLUDE display.klh
-%INCLUDE kunit.klh
+%include display.klh
+%include errors.klh
+%include strings.klh
+%include kunit.klh
 
 ROUTINE t_message : BOOLEAN
-VAR
-  entry : INTEGER
-  status : INTEGER
-BEGIN
-  clearUser
-  set_severity(WARN)
-  disp_msg('This is a error message')
-  set_severity(DEBUG)
-  disp_msg('This is a debug message')
-  RETURN(TRUE)
-END t_message
+  VAR
+    entry : INTEGER
+    status : INTEGER
+  BEGIN
+    --record date in log
+    display__show_date(TRUE)
+    --show debug messages
+    display__debug(TRUE)
+    --set message
+    display__set_severity(WARN)
+    display__set_message('This is a error message')
+    --print message to display
+    display__print
+    --set another message
+    display__set_severity(DEBUG)
+    display__set_message('This is a debug message')
+    --print message to display
+    display__print
+    --Do not record date
+    display__show_date(FALSE)
+    RETURN(TRUE)
+  END t_message
+
+ROUTINE t_displreg : BOOLEAN
+  VAR
+    numreg, numsr : INTEGER
+    str, str2 : STRING[30]
+    status, i : INTEGER
+  BEGIN
+    -- set string register
+    numsr = 6
+    str = 'string register test!'
+    SET_STR_REG(numsr, str, status)
+
+    str = 'SR['+i_to_s(numsr)+']=' + str
+
+    -- set num register
+    numreg = 10
+    i = 3018
+    SET_INT_REG(numreg, i, status)
+    IF status <> 0 THEN
+      karelError('Could not set R['+i_to_s(numreg)+']', ER_ABORT)
+    ENDIF
+    --get num register as string
+    str2 = numreg_to_s(numreg)
+    str2 = 'R['+i_to_s(numreg)+']=' + str2
+
+    --send as user message
+    display__set_severity(INFO)
+    display__set_message(display__string_reg(numsr))
+    display__print
+    display__set_message(display__register(numreg))
+    display__print
+
+    RETURN(kunit_eq_str(str, display__string_reg(numsr)) AND
+          kunit_eq_str(str2, display__register(numreg)))
+  END t_displreg
+
+ROUTINE t_displpr : BOOLEAN
+  VAR
+    numpr : INTEGER
+    strpr : STRING[130]
+    conf_str : STRING[25]
+    status: INTEGER
+    p : XYZWPREXT
+    grp_num : INTEGER
+  BEGIN
+    --set posreg
+    numpr = 80
+    grp_num = 1
+    $MNUFRAMENUM[grp_num] = 1
+    $MNUTOOLNUM[grp_num] = 1
+
+    p.x = 1.1
+    p.y = 2.2
+    p.z = 3.3
+    p.w = 4.4
+    p.p = 5.5
+    p.r = 6.6
+    conf_str = 'F U T, 0, 0, 0'
+    --convert to config type
+    CNV_STR_CONF(conf_str, p.config_data, status)
+    IF (status <> 0) THEN
+      karelError('Could not set PR['+i_to_s(numpr)+'] config', ER_ABORT)
+    ENDIF
+
+    SET_POS_REG(numpr, (p), status, grp_num)
+    IF status <> 0 THEN
+      karelError('Could not set PR['+i_to_s(numpr)+']', ER_ABORT)
+    ENDIF
+
+    --expected
+
+    strpr = 'PR[' + i_to_s(numpr) + ']=' + 'GP1:' + chr(13) &
+            + 'UF : 1, UT : 1,' & 
+            + '  CONFIG : F U T, 0, 0, 0' + chr(13) &
+            + 'X = 1.1mm, Y = 2.2mm, Z = 3.3mm, '+ chr(13) &
+            + 'W = 4.4deg, P = 5.5deg, R = 6.6deg'
+
+
+    --send as user message
+    display__set_severity(INFO)
+    display__set_message(display__posreg(numpr, grp_num))
+    display__print
+
+    RETURN(kunit_eq_str(strpr, display__posreg(numpr, grp_num)))
+
+  END t_displpr
 
 BEGIN
+  --clear TP display
+  display__clear
+  --run tests
   kunit_test('test_message()', t_message)
+  kunit_test('test_display_registers', t_displreg)
+  kunit_test('test_display_posreg', t_displpr)
+
+  --force show user panel
+    display__show
 
   kunit_done
 END test_display

@@ -1,8 +1,0 @@
-%ifndef display_private_h
-%define display_private_h
-
--- severity : 0 = WARN, 1 = ERR, 2 = DEBUG
-ROUTINE msgclass FROM display
-ROUTINE printTime : STRING FROM display
-
-%endif --display_h

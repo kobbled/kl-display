@@ -2,14 +2,10 @@
 %define display_c_t
 
 --character codes
-%INCLUDE klevccdf.kl
+%include klevccdf.kl
+%include errors.klt
 
 CONST
-    ER_WARN          = 0 -- warning no change in task execution
-    ER_WARN_STP      = 1 -- pause all taks and stop all motion 
-    ER_ABORT         = 2 -- abort all tasks and cancel
-    SUCCESS          = 0 -- success constant
-    EXISTS           = 7015 -- Already exists code
 
     WARN     = 0
     ERR      = 1

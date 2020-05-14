@@ -8,134 +8,171 @@ PROGRAM display
 %INCLUDE errors.klh
 %INCLUDE strings.klh
 %INCLUDE display.klh
-%INCLUDE display.private.klh
 
 BEGIN
 END display
-
---### Private #####
-
-ROUTINE msgclass
-BEGIN
-  -- determine classification of message
-  SELECT severity OF
-    CASE(0):
-        color = C_WARN
-        prefix = LBL_WARN
-    CASE(1):
-        color = C_ERR
-        prefix = LBL_ERR
-    CASE(2):
-        color = C_DEBUG
-        prefix = LBL_DEBUG
-    CASE(3):
-        color = C_INFO
-        prefix = LBL_INFO
-    ELSE:
-        karelError('severity not set correctly', ER_ABORT)
-  ENDSELECT
-
-END msgclass
-
-ROUTINE printTime
-VAR
-  tme   : INTEGER
-  sec : INTEGER
-  str    : STRING[30]
-  secstr : STRING[4]
-BEGIN
-    GET_TIME(tme)
-	CNV_TIME_STR(tme,str)
-    str = rstrip(str)
-    --get seconds
-    sec = tme AND 31
-    sec = sec * 2
-    
-    -- add to string
-    secstr = i_to_s(sec)
-    IF sec < 10 THEN
-        secstr = '0' + secstr
-    ENDIF
-    str = str + ':' + secstr
-
-    --add seconds
-    
-    RETURN(str)
-END printTime
 
 
 
 --### Public #####
 
---clear User display
-ROUTINE clearUser
-VAR
-	status : INTEGER
-    prog_int : INTEGER
-BEGIN
-	-- from klrdutil
-	clear_win(TPDISPLAY, status)
-	CHK_STAT(status)
-	-- Not sure if nessecary to clear user
-	-- FORCE_SPMENU(TP_PANEL, SPI_TPUSER, 1)
-END clearUser
+ROUTINE display__date
+  VAR
+    tme   : INTEGER
+    sec : INTEGER
+    str    : STRING[30]
+    secstr : STRING[4]
+  BEGIN
+    GET_TIME(tme)
+    CNV_TIME_STR(tme,str)
+    --strip out date DD-MMM-YYY
+    str = SUB_STR(str,1,9)
+    
+    RETURN(rstrip(str))
+  END display__date
 
-ROUTINE showUser
-BEGIN
-    FORCE_SPMENU(TP_PANEL, SPI_TPUSER, 1)
-END showUser
+ROUTINE display__show_date
+  BEGIN
+    show_date = shw
+  END display__show_date
+
+ROUTINE display__time
+  VAR
+    tme, hr, mnt, sec   : INTEGER
+    str    : STRING[30]
+  BEGIN
+    GET_TIME(tme)
+    CNV_TIME_STR(tme,str)
+    --parse out HH:MM: from DD-MMM-YYY HH:MM:
+    str = SUB_STR(str,STR_LEN(str)-6,STR_LEN(str))
+    str = rstrip(lstrip(str)) + ':'
+    --get seconds
+    sec = tme AND 31    -- 0000000000011111
+    --seconds stored 2-second increments (0-29)
+    -- double to convert to 0-59
+    sec = sec * 2
+
+    --combine into string HH:MM:SS
+    IF sec < 10 THEN str = str + '0' ; ENDIF
+    str = str + i_to_s(sec)
+    
+    RETURN(str)
+  END display__time
 
 --set severity
-ROUTINE set_severity
-BEGIN
+ROUTINE display__set_severity
+  BEGIN
     severity = sev_no
     -- determine classification of message
-    msgclass
-END set_severity
-
--- print error
-ROUTINE disp_msg
-VAR
-    s : INTEGER
-BEGIN
-  --handle unitialized variables
-  IF UNINIT(severity) THEN
-    set_severity(WARN)
-  ENDIF
-
-  --get time
-  disp_time
-
-  -- display message
-  WRITE TPDISPLAY(
-      CHR(cc_bgcolor), CHR(color),
-      prefix,
-      CHR(cc_bgcolor), CHR(cc_dfcolor),
-      msg,
-      CR)
-END disp_msg
+    SELECT severity OF
+      CASE(0):
+          color = C_WARN
+          prefix = LBL_WARN
+      CASE(1):
+          color = C_ERR
+          prefix = LBL_ERR
+      CASE(2):
+          color = C_DEBUG
+          prefix = LBL_DEBUG
+      CASE(3):
+          color = C_INFO
+          prefix = LBL_INFO
+      ELSE:
+          karelError('severity not set correctly', ER_ABORT)
+    ENDSELECT
+  END display__set_severity
 
 
---print string
-ROUTINE disp_str
-BEGIN
-    WRITE TPDISPLAY(u_str, CR)
-END disp_str
+--clear User display
+ROUTINE display__clear
+  VAR
+    status : INTEGER
+  BEGIN
+    -- from klrdutil
+    clear_win(TPDISPLAY, status)
+    CHK_STAT(status)
+    -- Not sure if nessecary to clear user
+    -- FORCE_SPMENU(TP_PANEL, SPI_TPUSER, 1)
+  END display__clear
 
---print integer
-ROUTINE disp_int
-BEGIN
-    WRITE TPDISPLAY(u_i, CR)
-END disp_int
+ROUTINE display__show
+  BEGIN
+      FORCE_SPMENU(TP_PANEL, SPI_TPUSER, 1)
+  END display__show
 
---print real
-ROUTINE disp_real
-BEGIN
-    WRITE TPDISPLAY(u_r, CR)
-END disp_real
+ROUTINE display__debug
+  BEGIN
+    show_debug = shw
+  END display__debug
 
---print time
-ROUTINE disp_time
-BEGIN
-    WRITE TPDISPLAY(printTime, CR)
-END disp_time
+ROUTINE display__info
+  BEGIN
+    show_info = shw
+  END display__info
+
+-- set message
+ROUTINE display__set_message
+  VAR
+      tme : STRING[18]
+  BEGIN
+    --handle unitialized variables
+    IF UNINIT(severity) THEN display__set_severity(WARN) ; ENDIF
+
+    --get time
+    tme = ''
+    IF show_date THEN tme = tme + display__date + ' ' ; ENDIF
+    tme = tme + display__time
+
+    message = tme + CHR(cc_bgcolor) + CHR(color) +
+               ' ' + prefix + CHR(cc_bgcolor) + CHR(cc_dfcolor) +
+              msg ;
+  END display__set_message
+
+ROUTINE display__get_message
+  BEGIN
+    RETURN(message)
+  END display__get_message
+
+-- print message set in display__set_message
+ROUTINE display__print
+  BEGIN
+    IF UNINIT(show_debug) THEN show_debug = FALSE ; ENDIF
+    IF UNINIT(show_info) THEN show_info = TRUE ; ENDIF
+    -- check if displaying debug info
+    IF (prefix = LBL_DEBUG) AND (NOT show_debug) THEN RETURN ;ENDIF
+    -- check if displaying info
+    IF (prefix = LBL_INFO) AND (NOT show_info) THEN RETURN ;ENDIF
+    WRITE TPDISPLAY(message, CR)
+  END display__print
+
+
+--print registers
+ROUTINE display__string_reg
+  BEGIN
+    RETURN('SR[' + i_to_s(reg_no) + ']=' + strreg_to_s(reg_no))
+  END display__string_reg
+
+ROUTINE display__register
+  BEGIN
+    RETURN('R[' + i_to_s(reg_no) + ']=' + numreg_to_s(reg_no))
+  END display__register
+
+ROUTINE display__posreg
+  BEGIN
+    RETURN('PR[' + i_to_s(reg_no) + ']=' + posreg_to_s(reg_no, grp_no))
+  END display__posreg
+
+ROUTINE display__io
+  VAR
+    val : INTEGER
+    s : STRING[5]
+  BEGIN
+    val = registers__get_io(typ, reg_no)
+    IF (NOT (typ ='AI')) OR (NOT (typ ='AO')) THEN
+      IF (val = 1) THEN s = 'TRUE' ; ENDIF
+      IF (val = 0) THEN s = 'FALSE' ; ENDIF
+    ELSE
+      s = i_to_s(val)
+    ENDIF
+    RETURN(typ + '['+ i_to_s(reg_no) + ']=' + s)
+  END display__io
