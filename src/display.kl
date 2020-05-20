@@ -1,13 +1,14 @@
 PROGRAM display
 %NOLOCKGROUP
 
-%INCLUDE display.klt
+%include display.klt
 --karel utility
-%INCLUDE klrdutil.kl
+%include klrdutil.kl
 
-%INCLUDE errors.klh
-%INCLUDE strings.klh
-%INCLUDE display.klh
+%include errors.klh
+%include strings.klh
+%include systemlib.klh
+%include display.klh
 
 BEGIN
 END display
@@ -16,48 +17,10 @@ END display
 
 --### Public #####
 
-ROUTINE display__date
-  VAR
-    tme   : INTEGER
-    sec : INTEGER
-    str    : STRING[30]
-    secstr : STRING[4]
-  BEGIN
-    GET_TIME(tme)
-    CNV_TIME_STR(tme,str)
-    --strip out date DD-MMM-YYY
-    str = SUB_STR(str,1,9)
-    
-    RETURN(rstrip(str))
-  END display__date
-
 ROUTINE display__show_date
   BEGIN
     show_date = shw
   END display__show_date
-
-ROUTINE display__time
-  VAR
-    tme, hr, mnt, sec   : INTEGER
-    str    : STRING[30]
-  BEGIN
-    GET_TIME(tme)
-    CNV_TIME_STR(tme,str)
-    --parse out HH:MM: from DD-MMM-YYY HH:MM:
-    str = SUB_STR(str,STR_LEN(str)-6,STR_LEN(str))
-    str = rstrip(lstrip(str)) + ':'
-    --get seconds
-    sec = tme AND 31    -- 0000000000011111
-    --seconds stored 2-second increments (0-29)
-    -- double to convert to 0-59
-    sec = sec * 2
-
-    --combine into string HH:MM:SS
-    IF sec < 10 THEN str = str + '0' ; ENDIF
-    str = str + i_to_s(sec)
-    
-    RETURN(str)
-  END display__time
 
 --set severity
 ROUTINE display__set_severity
@@ -120,8 +83,8 @@ ROUTINE display__set_message
 
     --get time
     tme = ''
-    IF show_date THEN tme = tme + display__date + ' ' ; ENDIF
-    tme = tme + display__time
+    IF show_date THEN tme = tme + system__date + ' ' ; ENDIF
+    tme = tme + system__time
 
     message = tme + CHR(cc_bgcolor) + CHR(color) +
                ' ' + prefix + CHR(cc_bgcolor) + CHR(cc_dfcolor) +

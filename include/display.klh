@@ -7,9 +7,7 @@
 %define prog_name_alias dspl
 
 -- namespaced members in format <prog_name_alias>__<func_name>
-declare(prog_name,date,prog_name_alias,date)
 declare(prog_name,show_date,prog_name_alias,shw_dte)
-declare(prog_name,time,prog_name_alias,time)
 declare(prog_name,set_severity,prog_name_alias,setSev)
 declare(prog_name,clear,prog_name_alias,clear)
 declare(prog_name,show,prog_name_alias,show)
@@ -23,9 +21,7 @@ declare(prog_name,register,prog_name_alias,regist)
 declare(prog_name,posreg,prog_name_alias,posreg)
 declare(prog_name,io,prog_name_alias,io)
 
-ROUTINE display__date : STRING FROM display
 ROUTINE display__show_date(shw : BOOLEAN) FROM display
-ROUTINE display__time : STRING FROM display
 -- severity : 0 = WARN, 1 = ERR, 2 = DEBUG
 ROUTINE display__set_severity(sev_no : INTEGER) FROM display
 -- user panel
