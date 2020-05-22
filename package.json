@@ -16,6 +16,7 @@
   ],
   "depends" : [
     "errors",
+    "systemlib",
     "Strings",
     "KUnit",
     "ktransw-macros"
