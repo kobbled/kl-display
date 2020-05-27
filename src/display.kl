@@ -80,6 +80,8 @@ ROUTINE display__set_message
   BEGIN
     --handle unitialized variables
     IF UNINIT(severity) THEN display__set_severity(WARN) ; ENDIF
+    IF UNINIT(show_date) THEN show_date = TRUE ; ENDIF
+    IF UNINIT(prefix) THEN display__set_severity(INFO) ; ENDIF
 
     --get time
     tme = ''
