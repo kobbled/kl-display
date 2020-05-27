@@ -9,7 +9,7 @@
     "src/display.kl"
   ],
   "tests" : [
-    "src/test/test_display.kl"
+    "test/test_display.kl"
   ],
   "includes" : [
     "include"
