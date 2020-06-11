@@ -50,7 +50,7 @@ ROUTINE t_displreg : BOOLEAN
     i = 3018
     SET_INT_REG(numreg, i, status)
     IF status <> 0 THEN
-      karelError('Could not set R['+i_to_s(numreg)+']', ER_ABORT)
+      karelError(status, 'Could not set R['+i_to_s(numreg)+']', ER_ABORT)
     ENDIF
     --get num register as string
     str2 = numreg_to_s(numreg)
@@ -92,12 +92,12 @@ ROUTINE t_displpr : BOOLEAN
     --convert to config type
     CNV_STR_CONF(conf_str, p.config_data, status)
     IF (status <> 0) THEN
-      karelError('Could not set PR['+i_to_s(numpr)+'] config', ER_ABORT)
+      karelError(status,'Could not set PR['+i_to_s(numpr)+'] config', ER_ABORT)
     ENDIF
 
     SET_POS_REG(numpr, (p), status, grp_num)
     IF status <> 0 THEN
-      karelError('Could not set PR['+i_to_s(numpr)+']', ER_ABORT)
+      karelError(status,'Could not set PR['+i_to_s(numpr)+']', ER_ABORT)
     ENDIF
 
     --expected

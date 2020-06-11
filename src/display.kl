@@ -41,7 +41,7 @@ ROUTINE display__set_severity
           color = C_INFO
           prefix = LBL_INFO
       ELSE:
-          karelError('severity not set correctly', ER_ABORT)
+          karelError(INVALID_TYPE_CODE, 'severity not set correctly', ER_ABORT)
     ENDSELECT
   END display__set_severity
 
