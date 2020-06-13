@@ -1,6 +1,7 @@
 PROGRAM test_display
 %NOLOCKGROUP
 
+%include errors.klt
 %include display.c.klt
 
 %include display.klh
@@ -8,27 +9,17 @@ PROGRAM test_display
 %include strings.klh
 %include kunit.klh
 
+-- user display log
+%class usrdis('dispclass.klc','dispclass.klh')
+
 ROUTINE t_message : BOOLEAN
   VAR
     entry : INTEGER
     status : INTEGER
   BEGIN
-    --record date in log
-    display__show_date(TRUE)
-    --show debug messages
-    display__debug(TRUE)
-    --set message
-    display__set_severity(WARN)
-    display__set_message('This is a error message')
     --print message to display
-    display__print
-    --set another message
-    display__set_severity(DEBUG)
-    display__set_message('This is a debug message')
-    --print message to display
-    display__print
-    --Do not record date
-    display__show_date(FALSE)
+    usrdis__print(WARN, 'This is a error message')
+    usrdis__print(DEBUG,'This is a debug message')
     RETURN(TRUE)
   END t_message
 
@@ -55,16 +46,15 @@ ROUTINE t_displreg : BOOLEAN
     --get num register as string
     str2 = numreg_to_s(numreg)
     str2 = 'R['+i_to_s(numreg)+']=' + str2
-
+    
+    --Do not record date
+    usrdis__show_date(FALSE)
     --send as user message
-    display__set_severity(INFO)
-    display__set_message(display__string_reg(numsr))
-    display__print
-    display__set_message(display__register(numreg))
-    display__print
+    usrdis__print(INFO,display__string_reg(numsr, FALSE))
+    usrdis__print(INFO,display__register(numreg, FALSE))
 
-    RETURN(kunit_eq_str(str, display__string_reg(numsr)) AND
-          kunit_eq_str(str2, display__register(numreg)))
+    RETURN(kunit_eq_str(str, display__string_reg(numsr, FALSE)) AND
+          kunit_eq_str(str2, display__register(numreg, FALSE)))
   END t_displreg
 
 ROUTINE t_displpr : BOOLEAN
@@ -108,26 +98,26 @@ ROUTINE t_displpr : BOOLEAN
             + 'X = 1.1mm, Y = 2.2mm, Z = 3.3mm, '+ chr(13) &
             + 'W = 4.4deg, P = 5.5deg, R = 6.6deg'
 
-
+    --Do not record date
+    usrdis__show_date(FALSE)
     --send as user message
-    display__set_severity(INFO)
-    display__set_message(display__posreg(numpr, grp_num))
-    display__print
+    usrdis__print(INFO, display__posreg(numpr, grp_num, FALSE))
 
-    RETURN(kunit_eq_str(strpr, display__posreg(numpr, grp_num)))
+    RETURN(kunit_eq_str(strpr, display__posreg(numpr, grp_num, FALSE)))
 
   END t_displpr
 
 BEGIN
-  --clear TP display
-  display__clear
+  usrdis__constructor('', TRUE, TRUE, TRUE)
+
   --run tests
   kunit_test('test_message()', t_message)
   kunit_test('test_display_registers', t_displreg)
   kunit_test('test_display_posreg', t_displpr)
 
+  usrdis__destructor
   --force show user panel
-    display__show
+  display__show
 
   kunit_done
 END test_display

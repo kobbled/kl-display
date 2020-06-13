@@ -1,0 +1,281 @@
+PROGRAM class_name
+%NOLOCKGROUP
+%COMMENT = 'display class'
+
+%include namespace.m
+
+%include errors.klt
+%include display.klt
+--character codes
+%include klevccdf.kl
+
+CONST
+  PIPNAME = 'PIP:class_name.DAT'
+  -- severity color
+  C_ERR   = cc_red
+  C_WARN  = cc_yellow
+  C_DEBUG = cc_green
+  C_INFO  = cc_blue
+
+  -- severity prefixes for messages 
+  LBL_ERR   = 'ERR '
+  LBL_WARN  = 'WARN '
+  LBL_DEBUG = 'DBUG '
+  LBL_INFO  = 'INFO '
+
+VAR
+    this : DISP_STRUCT
+    log_fl : FILE
+    pip_fl : FILE
+    shw_date,
+    shw_debug, 
+    shw_info : BOOLEAN
+
+%include errors.klh
+%include systemlib.klh
+%include files.klh
+%include strings.klh
+%include display.klh
+
+%include dispclass.klh
+%include dispclass.private.klh
+
+--private
+%defeval set_severity classfunc(stSev)
+
+--set severity
+ROUTINE set_severity
+  BEGIN
+    this.severity = sev_no
+    -- determine classification of message
+    SELECT this.severity OF
+      CASE(0): --warning
+          this.color = C_WARN
+          this.prefix = LBL_WARN
+      CASE(1): --error
+          this.color = C_ERR
+          this.prefix = LBL_ERR
+      CASE(2): --debug
+          this.color = C_DEBUG
+          this.prefix = LBL_DEBUG
+      CASE(3): --info
+          this.color = C_INFO
+          this.prefix = LBL_INFO
+      CASE(4): --header
+          this.color = 0
+          this.prefix = ''
+      ELSE:
+          karelError(INVALID_TYPE_CODE, 'severity not set correctly', ER_ABORT)
+    ENDSELECT
+  END set_severity
+
+--public
+%defeval constructor classfunc(cntr)
+%defeval destructor classfunc(dsct)
+%defeval clear classfunc(clr)
+%defeval clear_file classfunc(clrfl)
+--show
+%defeval show_date classfunc(shdte)
+%defeval show_debug classfunc(dbg)
+%defeval show_info classfunc(info)
+--getters
+%defeval get_message classfunc(gtmsg)
+%defeval get_maxlines classfunc(gtmax)
+%defeval get_lines classfunc(gtlns)
+--setters
+%defeval set_log_file classfunc(stfl)
+%defeval set_message classfunc(stmsg)
+%defeval set_maxlines classfunc(stlns)
+--print
+%defeval print classfunc(print)
+%defeval write_pipe classfunc(wtpip)
+
+ROUTINE constructor
+  VAR
+    b : BOOLEAN
+  BEGIN
+    --set file and pipe
+    IF NOT UNINIT(filename) OR (filename='') OR (filename='TPDISPLAY') THEN
+      set_log_file(filename)
+    ELSE
+      this.filename=''
+    ENDIF
+    --clear pipe or device
+    clear
+
+    --show date?
+    show_date(show_dt)
+    --show debug messages?
+    show_debug(show_dbug)
+    --show info messages
+    show_info(show_dbug)
+
+    --reset line count
+    this.lines = 0
+    --set maximum lines in pipe
+    this.maxlines = 1000
+
+  END constructor
+
+
+ROUTINE destructor
+  BEGIN
+    this.filename=''
+    this.severity = 0
+    shw_date = FALSE
+    shw_debug = FALSE
+    shw_info = FALSE
+
+    this.message = ''
+
+    IF (this.filename = '') OR UNINIT(this.filename) THEN
+      files__close(this.pipname, pip_fl)
+      files__close(this.filename, log_fl)
+    ENDIF
+  END destructor
+
+ROUTINE clear
+  BEGIN
+    IF (this.filename = '') OR UNINIT(this.filename) THEN
+      display__clear
+    ELSE
+      files__clear(this.pipname, pip_fl)
+    ENDIF
+  END clear
+
+ROUTINE clear_file
+  BEGIN
+    IF NOT (this.filename = '') OR NOT UNINIT(this.filename) THEN
+      files__clear(this.filename, log_fl)
+    ENDIF
+  END clear_file
+
+
+--toogle members
+ROUTINE show_date
+  BEGIN
+    IF UNINIT(shw) THEN 
+      shw_date = FALSE
+    ELSE
+      shw_date = shw
+    ENDIF
+  END show_date
+
+ROUTINE show_debug
+  BEGIN
+    IF UNINIT(shw) THEN 
+      shw_debug = FALSE
+    ELSE
+      shw_debug = shw
+    ENDIF
+  END show_debug
+
+ROUTINE show_info
+  BEGIN
+    IF UNINIT(shw) THEN 
+      shw_info = FALSE
+    ELSE
+      shw_info = shw
+    ENDIF
+  END show_info
+
+--setters
+ROUTINE get_message
+  BEGIN
+    RETURN(this.message)
+  END get_message
+
+ROUTINE get_maxlines
+  BEGIN
+    RETURN(this.maxlines)
+  END get_maxlines
+
+ROUTINE get_lines
+  BEGIN
+    RETURN(this.lines)
+  END get_lines
+
+--setters
+
+-- log file routines
+ROUTINE set_log_file
+  VAR
+    b : BOOLEAN
+  BEGIN
+    IF NOT UNINIT(filename) OR (filename='') OR (filename='TPDISPLAY') THEN
+      --create file if doesnt exist
+      this.filename = filename
+      b = files__create(filename, log_fl)
+      --create pipe file if doesn't exist
+      this.pipname = PIPNAME
+      b = files__create(this.pipname, pip_fl)
+    ELSE
+      this.filename = ''
+      this.pipname = ''
+    ENDIF
+
+  END set_log_file
+
+-- set message
+ROUTINE set_message
+  VAR
+      tme : STRING[18]
+      lbl : STRING[12]
+  BEGIN
+    --handle unitialized variables
+    IF UNINIT(sev_no) THEN set_severity(WARN) ; ELSE set_severity(sev_no); ENDIF
+
+    --if header do not add logging time stamps
+    IF sev_no = HEAD THEN
+      this.message = str
+      RETURN
+    ENDIF
+
+    --set log label
+    IF (this.filename = '') OR UNINIT(this.filename) THEN
+      lbl = CHR(cc_bgcolor) + CHR(this.color) + &
+            ' ' + this.prefix + CHR(cc_bgcolor) + CHR(cc_dfcolor)
+    ELSE
+      lbl = ' ' + this.prefix
+    ENDIF
+
+    --get time
+    tme = ''
+    IF shw_date THEN tme = tme + system__date + ' ' ; ENDIF
+    tme = tme + system__time
+
+    this.message = tme + lbl + str ;
+  END set_message
+
+
+ROUTINE set_maxlines
+  BEGIN
+    this.maxlines = maxlines
+  END set_maxlines
+
+
+--print
+ROUTINE print
+  BEGIN
+    --set message first
+    set_message(sev_no, str)
+
+    -- check if displaying debug info
+    IF (this.prefix = LBL_DEBUG) AND (NOT shw_debug) THEN RETURN ;ENDIF
+    -- check if displaying info
+    IF (this.prefix = LBL_INFO) AND (NOT shw_info) THEN RETURN ;ENDIF
+
+    IF (this.filename = '') OR UNINIT(this.filename) THEN
+      WRITE TPDISPLAY(str_parse(this.message, MAX_DISPLAY_LENGTH), CR)
+    ELSE
+      files__write(str_parse(this.message, MAX_FILE_LENGTH), this.pipname, pip_fl)
+    ENDIF
+  END print
+
+ROUTINE write_pipe
+  BEGIN
+    files__write_from_pipe(this.pipname, pip_fl, this.filename, log_fl)
+  END write_pipe
+
+BEGIN
+END class_name

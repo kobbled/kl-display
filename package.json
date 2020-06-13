@@ -9,14 +9,18 @@
     "src/display.kl"
   ],
   "tests" : [
-    "test/test_display.kl"
+    "test/test_display.kl",
+    "test/tst_disp_log.kl"
   ],
   "includes" : [
-    "include"
+    "include",
+    "include/class"
   ],
   "depends" : [
     "errors",
     "systemlib",
+    "files",
+    "registers",
     "Strings",
     "KUnit",
     "ktransw-macros"

@@ -1,0 +1,58 @@
+PROGRAM tst_disp_log
+%NOLOCKGROUP
+
+CONST
+  LOG_NAME = 'RD:tstlog.DT'
+  SR_RANGE = 6
+  DI_RANGE = 16
+
+--color codes
+%include klevccdf.kl
+%include display.c.klt
+
+VAR 
+  i : INTEGER
+
+%include display.klh
+-- user display log
+%class usrdis('dispclass.klc','dispclass.klh')
+
+BEGIN
+  usrdis__constructor(LOG_NAME, TRUE, TRUE, TRUE)
+  --clear log
+  usrdis__clear_file
+  --print header
+  usrdis__print(HEAD, 'log file for prog:' + $SHELL_WRK.$ROUT_NAME)
+
+  --show date
+  usrdis__print(INFO, '')
+
+  --Do not record date
+  usrdis__show_date(FALSE)
+
+  --print out string registers
+  usrdis__print(HEAD, 'String Registers!')
+
+  FOR i=1 TO SR_RANGE DO 
+    usrdis__print(DEBUG, display__string_reg(i, TRUE))
+  ENDFOR
+
+  --print out digital inputs
+  usrdis__print(HEAD, 'Digital Inputs!')
+
+  FOR i=1 TO DI_RANGE DO 
+    usrdis__print(DEBUG, display__io('DI', i, TRUE))
+  ENDFOR
+
+
+  --print pipe to log
+  usrdis__write_pipe
+
+  usrdis__destructor
+
+  display__clear
+  WRITE TPDISPLAY(CR,CR,'display log test is done!',CR)
+  WRITE TPDISPLAY('View ' + LOG_NAME + ' for results.',CR)
+  display__show
+
+END tst_disp_log

@@ -1,28 +1,13 @@
 %ifndef display_c_t
 %define display_c_t
 
---character codes
-%include klevccdf.kl
-%include errors.klt
-
 CONST
 
     WARN     = 0
     ERR      = 1
     DEBUG    = 2
     INFO     = 3
-
-    -- severity color
-    C_ERR   = cc_red
-    C_WARN  = cc_yellow
-    C_DEBUG = cc_green
-    C_INFO  = cc_blue
-
-    -- severity prefixes for messages 
-    LBL_ERR   = 'ERR '
-    LBL_WARN  = 'WARN '
-    LBL_DEBUG = 'DBUG '
-    LBL_INFO  = 'INFO '
+    HEAD     = 4
 
 
 %endif --display_c_t
