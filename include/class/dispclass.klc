@@ -108,7 +108,7 @@ ROUTINE constructor
     --show debug messages?
     show_debug(show_dbug)
     --show info messages
-    show_info(show_dbug)
+    show_info(show_inf)
 
     --reset line count
     this.lines = 0
