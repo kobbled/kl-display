@@ -4,9 +4,9 @@
 %include namespace.m
 
 -- namespaced members in format <prog_name_alias>__<func_name>
-declare(class_name,set_severity,class_name,stSev)
+declare_member(class_name,set_severity,class_name,stSev)
 --setters
 -- severity : 0 = WARN, 1 = ERR, 2 = DEBUG
-ROUTINE classfunc(stSev) (sev_no : INTEGER) FROM class_name
+ROUTINE set_severity (sev_no : INTEGER) FROM class_name
 
 %endif -- dispclass_private

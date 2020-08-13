@@ -6,24 +6,21 @@
 %define prog_name display
 %define prog_name_alias dspl
 
--- namespaced members in format <prog_name_alias>__<func_name>
-declare(prog_name,clear,prog_name_alias,clear)
-declare(prog_name,show,prog_name_alias,show)
-declare(prog_name,get_message,prog_name_alias,get_msg)
-declare(prog_name,print,prog_name_alias,print)
-declare(prog_name,string_reg,prog_name_alias,strreg)
-declare(prog_name,register,prog_name_alias,regist)
-declare(prog_name,posreg,prog_name_alias,posreg)
-declare(prog_name,io,prog_name_alias,io)
-
 -- user panel
+declare_function(prog_name,clear,prog_name_alias,clear)
 ROUTINE display__clear FROM display
+declare_function(prog_name,show,prog_name_alias,show)
 ROUTINE display__show FROM display
+declare_function(prog_name,print,prog_name_alias,print)
 ROUTINE display__print(str : STRING) FROM display
 -- display registers
+declare_function(prog_name,string_reg,prog_name_alias,strreg)
 ROUTINE display__string_reg(reg_no : INTEGER; comment : BOOLEAN) : STRING FROM display
+declare_function(prog_name,register,prog_name_alias,regist)
 ROUTINE display__register(reg_no : INTEGER; comment : BOOLEAN) : STRING FROM display
+declare_function(prog_name,posreg,prog_name_alias,posreg)
 ROUTINE display__posreg(reg_no, grp_no : INTEGER; comment : BOOLEAN) : STRING FROM display
+declare_function(prog_name,io,prog_name_alias,io)
 ROUTINE display__io(typ : STRING; reg_no : INTEGER; comment : BOOLEAN) : STRING FROM display
 
 

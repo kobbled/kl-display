@@ -40,8 +40,7 @@ VAR
 %include dispclass.klh
 %include dispclass.private.klh
 
---private
-%defeval set_severity classfunc(stSev)
+-- ** private **
 
 --set severity
 ROUTINE set_severity
@@ -69,26 +68,7 @@ ROUTINE set_severity
     ENDSELECT
   END set_severity
 
---public
-%defeval constructor classfunc(cntr)
-%defeval destructor classfunc(dsct)
-%defeval clear classfunc(clr)
-%defeval clear_file classfunc(clrfl)
---show
-%defeval show_date classfunc(shdte)
-%defeval show_debug classfunc(dbg)
-%defeval show_info classfunc(info)
---getters
-%defeval get_message classfunc(gtmsg)
-%defeval get_maxlines classfunc(gtmax)
-%defeval get_lines classfunc(gtlns)
---setters
-%defeval set_log_file classfunc(stfl)
-%defeval set_message classfunc(stmsg)
-%defeval set_maxlines classfunc(stlns)
---print
-%defeval print classfunc(print)
-%defeval write_pipe classfunc(wtpip)
+-- ** public **
 
 ROUTINE constructor
   VAR
