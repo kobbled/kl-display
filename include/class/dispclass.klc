@@ -254,7 +254,7 @@ ROUTINE print
 
 ROUTINE write_pipe
   BEGIN
-    files__write_from_pipe(this.pipname, pip_fl, this.filename, log_fl)
+    files__write_from_pipe(this.pipname, pip_fl, this.filename, log_fl, TRUE)
   END write_pipe
 
 BEGIN
