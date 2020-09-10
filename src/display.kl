@@ -6,8 +6,8 @@ PROGRAM display
 %include klrdutil.kl
 
 %include errors.klh
-%include strings.klh
-%include registers.klh
+%from strings.klh %import str_parse, i_to_s, strreg_to_s, numreg_to_s, posreg_to_s
+%from registers.klh %import get_comment, get_io
 %include display.klh
 
 BEGIN

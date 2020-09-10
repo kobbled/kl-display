@@ -6,7 +6,7 @@ PROGRAM test_display
 
 %include display.klh
 %include errors.klh
-%include strings.klh
+%from strings.klh %import i_to_s, numreg_to_s, 
 %include kunit.klh
 
 -- user display log
