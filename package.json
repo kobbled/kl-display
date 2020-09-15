@@ -24,5 +24,9 @@
     "Strings",
     "KUnit",
     "ktransw-macros"
+  ],
+  "tp-interfaces" : [
+    {"routine" : "display__show", "program_name" : "userShow"},
+    {"routine" : "display__clear", "program_name" : "userClear"}
   ]
 }

@@ -1,0 +1,10 @@
+PROGRAM userShow
+%NOBUSYLAMP
+%NOLOCKGROUP
+
+
+%from display.klh %import show
+
+BEGIN
+	display__show
+END userShow

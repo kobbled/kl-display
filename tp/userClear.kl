@@ -1,0 +1,10 @@
+PROGRAM userClear
+%NOBUSYLAMP
+%NOLOCKGROUP
+
+
+%from display.klh %import clear
+
+BEGIN
+	display__clear
+END userClear
