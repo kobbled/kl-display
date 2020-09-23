@@ -93,7 +93,7 @@ ROUTINE constructor
     --reset line count
     this.lines = 0
     --set maximum lines in pipe
-    this.maxlines = 1000
+    this.maxlines = 500
 
   END constructor
 
