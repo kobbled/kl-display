@@ -22,8 +22,10 @@
     "files",
     "registers",
     "Strings",
-    "KUnit",
     "ktransw-macros"
+  ],
+  "tests-depends" : [
+    "KUnit"
   ],
   "tp-interfaces" : [
     {"routine" : "display__show", "program_name" : "userShow"},
