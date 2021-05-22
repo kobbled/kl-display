@@ -6,7 +6,8 @@
   "license" : "Apache 2.0",
   "author" : "",
   "source" : [
-    "src/display.kl"
+    "src/display.kl",
+    "src/print.kl"
   ],
   "tests" : [
     "test/test_display.kl",
@@ -29,6 +30,12 @@
   ],
   "tp-interfaces" : [
     {"routine" : "display__show", "program_name" : "userShow"},
-    {"routine" : "display__clear", "program_name" : "userClear"}
+    {"routine" : "display__clear", "program_name" : "userClear"},
+    {"routine" : "print__posreg", "program_name" : "printpr"}
+  ],
+  "interface-depends" : [
+    "TPElib",
+    "pose",
+    "registers"
   ]
 }

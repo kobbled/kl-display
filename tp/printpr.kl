@@ -1,0 +1,15 @@
+PROGRAM printpr
+%NOBUSYLAMP
+%NOLOCKGROUP
+
+VAR
+	reg_no : INTEGER
+	grp_no : INTEGER
+%from tpe.klh %import get_int_arg
+%from print.klh %import posreg
+
+BEGIN
+	reg_no = tpe__get_int_arg(1)
+	grp_no = tpe__get_int_arg(2)
+	print__posreg(reg_no,grp_no)
+END printpr

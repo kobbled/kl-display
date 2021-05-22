@@ -1,0 +1,16 @@
+%ifndef print_h
+%define print_h
+
+%include namespace.m
+
+%define prog_name print
+%define prog_name_alias print
+
+declare_function(prog_name,posreg,prog_name_alias,posrg)
+ROUTINE print__posreg(reg_no : INTEGER ; grp_no : INTEGER) FROM print
+declare_function(prog_name,numreg,prog_name_alias,numrg)
+ROUTINE print__numreg(reg_no : INTEGER) FROM print
+declare_function(prog_name,io,prog_name_alias,io)
+ROUTINE print__io(typ : STRING; reg_no : INTEGER) FROM print
+
+%endif --print_h
