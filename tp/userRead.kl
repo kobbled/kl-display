@@ -1,0 +1,16 @@
+PROGRAM userRead
+%NOBUSYLAMP
+%NOLOCKGROUP
+
+VAR
+	out_reg : INTEGER
+	prompt_msg : STRING[32]
+%from tpe.klh %import get_int_arg,get_string_arg
+%from registers.klh %import set_string
+%from display.klh %import input_string
+
+BEGIN
+	prompt_msg = tpe__get_string_arg(1)
+	out_reg = tpe__get_int_arg(2)
+	registers__set_string(out_reg, display__input_string(prompt_msg))
+END userRead

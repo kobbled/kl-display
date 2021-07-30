@@ -21,7 +21,17 @@ ROUTINE display__register(reg_no : INTEGER; show_reg : BOOLEAN) : STRING FROM di
 declare_function(prog_name,posreg,prog_name_alias,posreg)
 ROUTINE display__posreg(reg_no, grp_no : INTEGER; show_reg : BOOLEAN) : STRING FROM display
 declare_function(prog_name,io,prog_name_alias,io)
-ROUTINE display__io(typ : STRING; reg_no : INTEGER; comment : BOOLEAN) : STRING FROM display
-
+ROUTINE display__io(typ : STRING; reg_no : INTEGER; show_reg : BOOLEAN) : STRING FROM display
+--user inputs
+declare_function(prog_name,input_string,prog_name_alias,instr)
+ROUTINE display__input_string(prompt_msg : STRING) : STRING FROM display
+declare_function(prog_name,input_int,prog_name_alias,inint)
+ROUTINE display__input_int(prompt_msg : STRING) : INTEGER FROM display
+declare_function(prog_name,input_real,prog_name_alias,inreal)
+ROUTINE display__input_real(prompt_msg : STRING) : REAL FROM display
+declare_function(prog_name,keyboard,prog_name_alias,kb)
+ROUTINE display__keyboard : STRING FROM display
+declare_function(prog_name,alpha,prog_name_alias,alpha)
+ROUTINE display__alpha : STRING FROM display
 
 %endif --display_h

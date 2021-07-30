@@ -2,6 +2,12 @@ PROGRAM display
 %NOLOCKGROUP
 
 %include display.klt
+
+%include klevkmsk.kl
+
+VAR
+  keyboard : FILE
+
 --karel utility
 %include klrdutil.kl
 %include errors.klh
@@ -112,4 +118,98 @@ ROUTINE display__io
 
     RETURN(typ + '['+ i_to_s(reg_no) + cmt + ']=' + s)
   END display__io
+
+ROUTINE display__input_string
+  VAR
+    input : STRING[32]
+    status : INTEGER
+  BEGIN
+    clear_win(TPPROMPT, status)
+    WRITE TPPROMPT(prompt_msg)
+    input = display__alpha
+
+    RETURN(input)
+
+  END display__input_string
+
+ROUTINE display__input_int
+  VAR
+    input : INTEGER
+    status : INTEGER
+  BEGIN
+    clear_win(TPPROMPT, status)
+    WRITE TPPROMPT(prompt_msg)
+    READ(input)
+
+    RETURN(input)
+
+  END display__input_int
+
+ROUTINE display__input_real
+  VAR
+    input : REAL
+    status : INTEGER
+  BEGIN
+    clear_win(TPPROMPT, status)
+    WRITE TPPROMPT(prompt_msg)
+    READ(input)
+
+    RETURN(input)
+
+  END display__input_real
+
+ROUTINE display__keyboard
+  VAR
+%define keyboard_buffer_size 32
+    pop_index : INTEGER
+    key : INTEGER
+    n_bytes : INTEGER
+    status : INTEGER
+    input : STRING[keyboard_buffer_size]
+  BEGIN
+    input = ''
+
+    -- Suspend any outstanding TP Keyboard reads
+    PUSH_KEY_RD('TPKB', 255, pop_index, status)
+    -- Open a file to TP Keyboard with PASALL and FIELD attributes
+    -- and NOECHO
+    SET_FILE_ATR(keyboard, ATR_PASSALL)
+    SET_FILE_ATR(keyboard, ATR_FIELD)
+    CLR_IO_STAT(keyboard)
+    OPEN FILE keyboard ('RW', 'KB:TPKB')
+
+    -- Resume any outstanding TP Keyboard reads
+    POP_KEY_RD('TPKB', pop_index, status)
+
+
+    --for keyboard
+    READ_KB(keyboard, input, keyboard_buffer_size, 0, kc_enter_key, -1, '',
+      n_bytes, key, status)
+
+    IF (status = 0) THEN
+    WRITE (CR, 'key is ', key, ', n_chars_got = ', n_bytes)
+    ELSE
+    WRITE (CR, 'READ_KB status is ', status)
+    ENDIF
+
+    CLOSE FILE keyboard
+
+    RETURN(input)
+
+  END display__keyboard
+
+  ROUTINE display__alpha
+  VAR
+%define alphanumeric_buffer_size 32
+    status : INTEGER
+    input : STRING[alphanumeric_buffer_size]
+  BEGIN
+    input = ''
+
+    --for alpha string
+    DISCTRL_ALPH('t_fu', 2, 1, input, 'COMM', 0, ky_enter, status)
+
+    RETURN(input)
+
+  END display__alpha
 

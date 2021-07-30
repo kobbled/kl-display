@@ -34,6 +34,9 @@
     {"routine" : "display__print", "program_name" : "print"},
     {"routine" : "printlib__posreg", "program_name" : "printpr"},
     {"routine" : "printlib__numreg", "program_name" : "printnr"},
+    {"routine" : "display__input_string", "program_name" : "userRead"},
+    {"routine" : "display__input_int", "program_name" : "userReadInt"},
+    {"routine" : "display__input_int", "program_name" : "userReadReal"}
   ],
   "interface-depends" : [
     "TPElib",
