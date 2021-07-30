@@ -1,0 +1,13 @@
+PROGRAM printnr
+%NOBUSYLAMP
+%NOLOCKGROUP
+
+VAR
+	reg_no : INTEGER
+%from tpe.klh %import get_int_arg
+%from print.klh %import numreg
+
+BEGIN
+	reg_no = tpe__get_int_arg(1)
+	printlib__numreg(reg_no)
+END printnr

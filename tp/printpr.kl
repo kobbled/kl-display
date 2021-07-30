@@ -11,5 +11,5 @@ VAR
 BEGIN
 	reg_no = tpe__get_int_arg(1)
 	grp_no = tpe__get_int_arg(2)
-	print__posreg(reg_no,grp_no)
+	printlib__posreg(reg_no,grp_no)
 END printpr

@@ -3,14 +3,14 @@
 
 %include namespace.m
 
-%define prog_name print
+%define prog_name printlib
 %define prog_name_alias print
 
 declare_function(prog_name,posreg,prog_name_alias,posrg)
-ROUTINE print__posreg(reg_no : INTEGER ; grp_no : INTEGER) FROM print
+ROUTINE printlib__posreg(reg_no : INTEGER ; grp_no : INTEGER) FROM printlib
 declare_function(prog_name,numreg,prog_name_alias,numrg)
-ROUTINE print__numreg(reg_no : INTEGER) FROM print
+ROUTINE printlib__numreg(reg_no : INTEGER) FROM printlib
 declare_function(prog_name,io,prog_name_alias,io)
-ROUTINE print__io(typ : STRING; reg_no : INTEGER) FROM print
+ROUTINE printlib__io(typ : STRING; reg_no : INTEGER) FROM printlib
 
 %endif --print_h

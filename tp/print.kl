@@ -1,0 +1,13 @@
+PROGRAM print
+%NOBUSYLAMP
+%NOLOCKGROUP
+
+VAR
+	str : STRING[32]
+%from tpe.klh %import get_string_arg
+%from display.klh %import print
+
+BEGIN
+	str = tpe__get_string_arg(1)
+	display__print(str)
+END print

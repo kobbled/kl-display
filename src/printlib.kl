@@ -1,0 +1,27 @@
+PROGRAM printlib
+%NOBUSYLAMP
+%COMMENT = 'breakout TP functions'
+%UNINITVARS
+%NOLOCKGROUP
+%NOPAUSE = COMMAND + TPENABLE + ERROR
+
+%include display.klh
+%include print.klh
+
+ROUTINE printlib__numreg
+  BEGIN
+    display__print(display__register(reg_no, FALSE) )
+  END printlib__numreg
+
+ROUTINE printlib__posreg
+  BEGIN
+    display__print(display__posreg(reg_no, grp_no, FALSE) )
+  END printlib__posreg
+
+ROUTINE printlib__io
+  BEGIN
+    display__print(display__io(typ, reg_no, FALSE) )
+  END printlib__io
+
+BEGIN
+END printlib

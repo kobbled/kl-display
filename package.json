@@ -7,7 +7,7 @@
   "author" : "",
   "source" : [
     "src/display.kl",
-    "src/print.kl"
+    "src/printlib.kl"
   ],
   "tests" : [
     "test/test_display.kl",
@@ -31,7 +31,9 @@
   "tp-interfaces" : [
     {"routine" : "display__show", "program_name" : "userShow"},
     {"routine" : "display__clear", "program_name" : "userClear"},
-    {"routine" : "print__posreg", "program_name" : "printpr"}
+    {"routine" : "display__print", "program_name" : "print"},
+    {"routine" : "printlib__posreg", "program_name" : "printpr"},
+    {"routine" : "printlib__numreg", "program_name" : "printnr"},
   ],
   "interface-depends" : [
     "TPElib",
