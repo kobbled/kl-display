@@ -15,11 +15,11 @@ declare_function(prog_name,print,prog_name_alias,print)
 ROUTINE display__print(str : STRING) FROM display
 -- display registers
 declare_function(prog_name,string_reg,prog_name_alias,strreg)
-ROUTINE display__string_reg(reg_no : INTEGER; comment : BOOLEAN) : STRING FROM display
+ROUTINE display__string_reg(reg_no : INTEGER; show_reg : BOOLEAN) : STRING FROM display
 declare_function(prog_name,register,prog_name_alias,regist)
-ROUTINE display__register(reg_no : INTEGER; comment : BOOLEAN) : STRING FROM display
+ROUTINE display__register(reg_no : INTEGER; show_reg : BOOLEAN) : STRING FROM display
 declare_function(prog_name,posreg,prog_name_alias,posreg)
-ROUTINE display__posreg(reg_no, grp_no : INTEGER; comment : BOOLEAN) : STRING FROM display
+ROUTINE display__posreg(reg_no, grp_no : INTEGER; show_reg : BOOLEAN) : STRING FROM display
 declare_function(prog_name,io,prog_name_alias,io)
 ROUTINE display__io(typ : STRING; reg_no : INTEGER; comment : BOOLEAN) : STRING FROM display
 

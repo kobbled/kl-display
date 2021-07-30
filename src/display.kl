@@ -4,7 +4,6 @@ PROGRAM display
 %include display.klt
 --karel utility
 %include klrdutil.kl
-
 %include errors.klh
 %from strings.klh %import str_parse, i_to_s, strreg_to_s, numreg_to_s, posreg_to_s
 %from registers.klh %import get_comment, get_io
@@ -22,6 +21,9 @@ ROUTINE display__clear
   BEGIN
     -- from klrdutil
     clear_win(TPDISPLAY, status)
+    clear_win(TPPROMPT, status)
+    clear_win(TPFUNC, status)
+
     CHK_STAT(status)
     -- Not sure if nessecary to clear user
     -- FORCE_SPMENU(TP_PANEL, SPI_TPUSER, 1)
@@ -43,11 +45,12 @@ ROUTINE display__string_reg
   VAR
     cmt : STRING[17]
   BEGIN
+    IF NOT show_reg THEN RETURN(strreg_to_s(reg_no)); ENDIF
+
+    cmt = registers__get_comment('SR', reg_no)
     --set comment
-    IF comment THEN
-      cmt = ':' + registers__get_comment('SR', reg_no)
-    ELSE
-      cmt = ''
+    IF STR_LEN(cmt) > 0 THEN
+      cmt = ':' + cmt
     ENDIF
 
     RETURN('SR[' + i_to_s(reg_no) + cmt + ']=' + strreg_to_s(reg_no))
@@ -57,25 +60,28 @@ ROUTINE display__register
   VAR
     cmt : STRING[17]
   BEGIN
+    IF NOT show_reg THEN RETURN(numreg_to_s(reg_no)); ENDIF
+
     --set comment
-    IF comment THEN
-      cmt = ':' + registers__get_comment('R', reg_no)
-    ELSE
-      cmt = ''
+    cmt = registers__get_comment('R', reg_no)
+    IF STR_LEN(cmt) > 0 THEN
+      cmt = ':' + cmt
     ENDIF
 
     RETURN('R[' + i_to_s(reg_no) + cmt + ']=' + numreg_to_s(reg_no))
+
   END display__register
 
 ROUTINE display__posreg
   VAR
     cmt : STRING[17]
   BEGIN
+    IF NOT show_reg THEN RETURN(posreg_to_s(reg_no, grp_no)); ENDIF
+
     --set comment
-    IF comment THEN
-      cmt = ':' + registers__get_comment('PR', reg_no)
-    ELSE
-      cmt = ''
+    cmt = registers__get_comment('PR', reg_no)
+    IF STR_LEN(cmt) > 0 THEN
+      cmt = ':' + cmt
     ENDIF
 
     RETURN('PR[' + i_to_s(reg_no) + cmt + ']=' + posreg_to_s(reg_no, grp_no))
@@ -87,6 +93,7 @@ ROUTINE display__io
     s : STRING[5]
     cmt : STRING[17]
   BEGIN
+
     val = registers__get_io(typ, reg_no)
     IF (NOT (typ ='AI')) OR (NOT (typ ='AO')) THEN
       IF (val = 1) THEN s = 'TRUE' ; ENDIF
@@ -95,12 +102,14 @@ ROUTINE display__io
       s = i_to_s(val)
     ENDIF
 
+    IF NOT show_reg THEN RETURN(s); ENDIF
+
     --set comment
-    IF comment THEN
-      cmt = ':' + registers__get_comment(typ, reg_no)
-    ELSE
-      cmt = ''
+    cmt = registers__get_comment(typ, reg_no)
+    IF STR_LEN(cmt) > 0 THEN
+      cmt = ':' + cmt
     ENDIF
 
     RETURN(typ + '['+ i_to_s(reg_no) + cmt + ']=' + s)
   END display__io
+
