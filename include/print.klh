@@ -6,10 +6,16 @@
 %define prog_name printlib
 %define prog_name_alias print
 
+declare_function(prog_name,posreg_line,prog_name_alias,posrgl)
+ROUTINE printlib__posreg_line(reg_no : INTEGER ; grp_no : INTEGER) FROM printlib
 declare_function(prog_name,posreg,prog_name_alias,posrg)
 ROUTINE printlib__posreg(reg_no : INTEGER ; grp_no : INTEGER) FROM printlib
+declare_function(prog_name,numreg_line,prog_name_alias,numrgl)
+ROUTINE printlib__numreg_line(reg_no : INTEGER) FROM printlib
 declare_function(prog_name,numreg,prog_name_alias,numrg)
 ROUTINE printlib__numreg(reg_no : INTEGER) FROM printlib
+declare_function(prog_name,io_line,prog_name_alias,iol)
+ROUTINE printlib__io_line(typ : STRING; reg_no : INTEGER) FROM printlib
 declare_function(prog_name,io,prog_name_alias,io)
 ROUTINE printlib__io(typ : STRING; reg_no : INTEGER) FROM printlib
 

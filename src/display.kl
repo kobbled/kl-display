@@ -41,9 +41,14 @@ ROUTINE display__show
   END display__show
 
 -- print message set in display__set_message
-ROUTINE display__print
+ROUTINE display__print_line
   BEGIN
     WRITE TPDISPLAY(str_parse(str, MAX_DISPLAY_LENGTH), CR)
+  END display__print_line
+
+ROUTINE display__print
+  BEGIN
+    WRITE TPDISPLAY(str_parse(str, MAX_DISPLAY_LENGTH))
   END display__print
 
 --print registers

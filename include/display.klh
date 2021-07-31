@@ -11,6 +11,8 @@ declare_function(prog_name,clear,prog_name_alias,clear)
 ROUTINE display__clear FROM display
 declare_function(prog_name,show,prog_name_alias,show)
 ROUTINE display__show FROM display
+declare_function(prog_name,print_line,prog_name_alias,printl)
+ROUTINE display__print_line(str : STRING) FROM display
 declare_function(prog_name,print,prog_name_alias,print)
 ROUTINE display__print(str : STRING) FROM display
 -- display registers

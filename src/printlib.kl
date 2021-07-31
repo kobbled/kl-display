@@ -8,19 +8,34 @@ PROGRAM printlib
 %include display.klh
 %include print.klh
 
+ROUTINE printlib__numreg_line
+  BEGIN
+    display__print(display__register(reg_no, TRUE) )
+  END printlib__numreg_line
+
 ROUTINE printlib__numreg
   BEGIN
-    display__print(display__register(reg_no, FALSE) )
+    WRITE TPDISPLAY(display__register(reg_no, FALSE) )
   END printlib__numreg
+
+ROUTINE printlib__posreg_line
+  BEGIN
+    display__print(display__posreg(reg_no, grp_no, TRUE) )
+  END printlib__posreg_line
 
 ROUTINE printlib__posreg
   BEGIN
-    display__print(display__posreg(reg_no, grp_no, FALSE) )
+    WRITE TPDISPLAY(display__posreg(reg_no, grp_no, FALSE) )
   END printlib__posreg
+
+ROUTINE printlib__io_line
+  BEGIN
+    display__print(display__io(typ, reg_no, TRUE) )
+  END printlib__io_line
 
 ROUTINE printlib__io
   BEGIN
-    display__print(display__io(typ, reg_no, FALSE) )
+    WRITE TPDISPLAY(display__io(typ, reg_no, FALSE) )
   END printlib__io
 
 BEGIN

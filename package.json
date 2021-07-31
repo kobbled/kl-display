@@ -32,6 +32,7 @@
     {"routine" : "display__show", "program_name" : "userShow"},
     {"routine" : "display__clear", "program_name" : "userClear"},
     {"routine" : "display__print", "program_name" : "print"},
+    {"routine" : "display__print_line", "program_name" : "print_line"},
     {"routine" : "printlib__posreg", "program_name" : "printpr"},
     {"routine" : "printlib__numreg", "program_name" : "printnr"},
     {"routine" : "display__input_string", "program_name" : "userRead"},
