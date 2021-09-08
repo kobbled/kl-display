@@ -2,6 +2,7 @@ PROGRAM display
 %NOLOCKGROUP
 
 %include display.klt
+%include register_types.klt
 
 %include klevkmsk.kl
 
@@ -12,7 +13,7 @@ VAR
 %include klrdutil.kl
 %include errors.klh
 %from strings.klh %import str_parse, i_to_s, strreg_to_s, numreg_to_s, posreg_to_s
-%from registers.klh %import get_comment, get_io
+%include registers.klh
 %include display.klh
 
 BEGIN
@@ -58,7 +59,7 @@ ROUTINE display__string_reg
   BEGIN
     IF NOT show_reg THEN RETURN(strreg_to_s(reg_no)); ENDIF
 
-    cmt = registers__get_comment('SR', reg_no)
+    cmt = registers__get_comment(DATA_STRING, reg_no)
     --set comment
     IF STR_LEN(cmt) > 0 THEN
       cmt = ':' + cmt
@@ -74,7 +75,7 @@ ROUTINE display__register
     IF NOT show_reg THEN RETURN(numreg_to_s(reg_no)); ENDIF
 
     --set comment
-    cmt = registers__get_comment('R', reg_no)
+    cmt = registers__get_comment(DATA_REG, reg_no)
     IF STR_LEN(cmt) > 0 THEN
       cmt = ':' + cmt
     ENDIF
@@ -90,7 +91,7 @@ ROUTINE display__posreg
     IF NOT show_reg THEN RETURN(posreg_to_s(reg_no, grp_no)); ENDIF
 
     --set comment
-    cmt = registers__get_comment('PR', reg_no)
+    cmt = registers__get_comment(DATA_POSREG, reg_no)
     IF STR_LEN(cmt) > 0 THEN
       cmt = ':' + cmt
     ENDIF
@@ -104,8 +105,7 @@ ROUTINE display__io
     s : STRING[5]
     cmt : STRING[17]
   BEGIN
-
-    val = registers__get_io(typ, reg_no)
+    val = registers__get_io(registers__get_type_enum(typ), reg_no)
     IF (NOT (typ ='AI')) OR (NOT (typ ='AO')) THEN
       IF (val = 1) THEN s = 'TRUE' ; ENDIF
       IF (val = 0) THEN s = 'FALSE' ; ENDIF
@@ -116,7 +116,7 @@ ROUTINE display__io
     IF NOT show_reg THEN RETURN(s); ENDIF
 
     --set comment
-    cmt = registers__get_comment(typ, reg_no)
+    cmt = registers__get_comment(registers__get_type_enum(typ), reg_no)
     IF STR_LEN(cmt) > 0 THEN
       cmt = ':' + cmt
     ENDIF
