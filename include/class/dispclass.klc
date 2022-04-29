@@ -70,7 +70,7 @@ ROUTINE set_severity
 
 -- ** public **
 
-ROUTINE constructor
+ROUTINE new
   VAR
     b : BOOLEAN
   BEGIN
@@ -95,10 +95,10 @@ ROUTINE constructor
     --set maximum lines in pipe
     this.maxlines = 500
 
-  END constructor
+  END new
 
 
-ROUTINE destructor
+ROUTINE delete
   BEGIN
     this.filename=''
     this.severity = 0
@@ -112,7 +112,7 @@ ROUTINE destructor
       files__close(this.pipname, pip_fl)
       files__close(this.filename, log_fl)
     ENDIF
-  END destructor
+  END delete
 
 ROUTINE clear
   BEGIN

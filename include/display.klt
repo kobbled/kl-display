@@ -6,7 +6,7 @@
 --dimensions of TPDisplay
 %define MAX_DISPLAY_LENGTH 40
 --A3 document size
-%define MAX_FILE_LENGTH 88
+%define MAX_FILE_LENGTH 100
 
 TYPE
   DISP_STRUCT FROM display = STRUCTURE
