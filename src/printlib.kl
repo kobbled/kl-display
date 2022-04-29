@@ -5,8 +5,13 @@ PROGRAM printlib
 %NOLOCKGROUP
 %NOPAUSE = COMMAND + TPENABLE + ERROR
 
+%define LOG_NAME 'RD:TPlog.DT'
+%include display.c.klt
+
 %include display.klh
 %include print.klh
+
+%class tplog('dispclass.klc','dispclass.klh')
 
 ROUTINE printlib__numreg_line
   BEGIN
@@ -37,6 +42,55 @@ ROUTINE printlib__io
   BEGIN
     WRITE TPDISPLAY(display__io(typ, reg_no, FALSE) )
   END printlib__io
+
+--logging TP wrapper
+
+ROUTINE printlib__init_log
+  VAR
+    b1, b2 : BOOLEAN
+  BEGIN
+    IF showdebug = 1 THEN
+      b1 = TRUE
+    ELSE
+      b1 = FALSE
+    ENDIF
+
+    IF showinfo = 1 THEN
+      b2 = TRUE
+    ELSE
+      b2 = FALSE
+    ENDIF
+
+    --(log_filename, show_date, show_debug, show_info)
+    tplog__new(LOG_NAME, FALSE, b1, b2)
+    tplog__clear_file
+  END printlib__init_log
+
+ROUTINE printlib__drop_log
+  BEGIN
+    --tplog__write_pipe
+    tplog__delete
+  END printlib__drop_log
+
+ROUTINE printlib__log_string
+  BEGIN
+    tplog__print(msg_typ, s)
+  END printlib__log_string
+
+ROUTINE printlib__log_numreg
+  BEGIN
+    tplog__print(msg_typ, display__register(reg_no, FALSE))
+  END printlib__log_numreg
+
+ROUTINE printlib__log_posreg
+  BEGIN
+    tplog__print(msg_typ, display__posreg(reg_no, grp_no, FALSE))
+  END printlib__log_posreg
+
+ROUTINE printlib__log_io
+  BEGIN
+    tplog__print(msg_typ, display__io(typ, reg_no, FALSE))
+  END printlib__log_io
 
 BEGIN
 END printlib

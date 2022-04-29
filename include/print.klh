@@ -18,5 +18,17 @@ declare_function(prog_name,io_line,prog_name_alias,iol)
 ROUTINE printlib__io_line(typ : STRING; reg_no : INTEGER) FROM printlib
 declare_function(prog_name,io,prog_name_alias,io)
 ROUTINE printlib__io(typ : STRING; reg_no : INTEGER) FROM printlib
-
+--logging TP wrapper
+declare_function(prog_name,init_log,prog_name_alias,intlg)
+ROUTINE printlib__init_log(showdebug : INTEGER; showinfo : INTEGER) FROM printlib
+declare_function(prog_name,drop_log,prog_name_alias,drplg)
+ROUTINE printlib__drop_log FROM printlib
+declare_function(prog_name,log_string,prog_name_alias,strlg)
+ROUTINE printlib__log_string(msg_typ : INTEGER; s : STRING) FROM printlib
+declare_function(prog_name,log_numreg,prog_name_alias,nrlg)
+ROUTINE printlib__log_numreg(msg_typ : INTEGER; reg_no : INTEGER) FROM printlib
+declare_function(prog_name,log_posreg,prog_name_alias,prlg)
+ROUTINE printlib__log_posreg(msg_typ : INTEGER; reg_no : INTEGER ; grp_no : INTEGER) FROM printlib
+declare_function(prog_name,log_io,prog_name_alias,iolg)
+ROUTINE printlib__log_io(msg_typ : INTEGER; typ : STRING; reg_no : INTEGER) FROM printlib
 %endif --print_h

@@ -37,7 +37,13 @@
     {"routine" : "printlib__numreg", "program_name" : "printnr"},
     {"routine" : "display__input_string", "program_name" : "userRead"},
     {"routine" : "display__input_int", "program_name" : "userReadInt"},
-    {"routine" : "display__input_int", "program_name" : "userReadReal"}
+    {"routine" : "display__input_real", "program_name" : "userReadReal"},
+    {"routine" : "printlib__init_log", "program_name" : "log_start"},
+    {"routine" : "printlib__drop_log", "program_name" : "log_stop"},
+    {"routine" : "printlib__log_string", "program_name" : "log_string"},
+    {"routine" : "printlib__log_numreg", "program_name" : "log_numreg"},
+    {"routine" : "printlib__log_posreg", "program_name" : "log_posreg"},
+    {"routine" : "printlib__log_io", "program_name" : "log_io"}
   ],
   "interface-depends" : [
     "TPElib",
