@@ -38,9 +38,11 @@ ROUTINE set_message (sev_no : INTEGER ; str : STRING) FROM class_name
 declare_member(class_name,set_maxlines,class_name,stlns)
 ROUTINE set_maxlines (maxlines : INTEGER) FROM class_name
 --print to device
-declare_member(class_name,print,class_name,print)
-ROUTINE print (sev_no : INTEGER ; str : STRING) FROM class_name
+declare_member(class_name,print_pipe,class_name,prntp)
+ROUTINE print_pipe (sev_no : INTEGER ; str : STRING) FROM class_name
 declare_member(class_name,write_pipe,class_name,wtpip)
 ROUTINE write_pipe FROM class_name
+declare_member(class_name,print,class_name,print)
+ROUTINE print (sev_no : INTEGER ; str : STRING) FROM class_name
 
 %endif --end header

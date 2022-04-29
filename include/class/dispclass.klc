@@ -235,7 +235,12 @@ ROUTINE set_maxlines
 
 
 --print
-ROUTINE print
+--::todo.. issue with pipe file writes jumbling information
+--         mainly missing characters, or intersplicing characters of two strings
+--         data race conditions may be occuring. Check documentation on properly writing
+--         to the pipe. Make a test case karel program to test writing to the pipe, and
+--         dumping the pipe once reached max lines. May primarily be occuring with TP calls.
+ROUTINE print_pipe
   BEGIN
     --set message first
     set_message(sev_no, str)
@@ -250,12 +255,29 @@ ROUTINE print
     ELSE
       files__write(str_parse(this.message, MAX_FILE_LENGTH), this.pipname, pip_fl)
     ENDIF
-  END print
+  END print_pipe
 
 ROUTINE write_pipe
   BEGIN
     files__write_from_pipe(this.pipname, pip_fl, this.filename, log_fl, TRUE)
   END write_pipe
+
+ROUTINE print
+  BEGIN
+    --set message first
+    set_message(sev_no, str)
+
+    -- check if displaying debug info
+    IF (this.prefix = LBL_DEBUG) AND (NOT shw_debug) THEN RETURN ;ENDIF
+    -- check if displaying info
+    IF (this.prefix = LBL_INFO) AND (NOT shw_info) THEN RETURN ;ENDIF
+
+    IF (this.filename = '') OR UNINIT(this.filename) THEN
+      WRITE TPDISPLAY(str_parse(this.message, MAX_DISPLAY_LENGTH), CR)
+    ELSE
+      files__write(str_parse(this.message, MAX_FILE_LENGTH), this.filename, log_fl)
+    ENDIF
+  END print
 
 BEGIN
 END class_name

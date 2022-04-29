@@ -108,14 +108,14 @@ ROUTINE t_displpr : BOOLEAN
   END t_displpr
 
 BEGIN
-  usrdis__constructor('', TRUE, TRUE, TRUE)
+  usrdis__new('', TRUE, TRUE, TRUE)
 
   --run tests
   kunit_test('test_message()', t_message)
   kunit_test('test_display_registers', t_displreg)
   kunit_test('test_display_posreg', t_displpr)
 
-  usrdis__destructor
+  usrdis__delete
   --force show user panel
   display__show
 

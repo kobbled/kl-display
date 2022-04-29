@@ -18,7 +18,7 @@ VAR
 %class usrdis('dispclass.klc','dispclass.klh')
 
 BEGIN
-  usrdis__constructor(LOG_NAME, TRUE, TRUE, TRUE)
+  usrdis__new(LOG_NAME, TRUE, TRUE, TRUE)
   --clear log
   usrdis__clear_file
   --print header
@@ -48,7 +48,7 @@ BEGIN
   --print pipe to log
   usrdis__write_pipe
 
-  usrdis__destructor
+  usrdis__delete
 
   display__clear
   WRITE TPDISPLAY(CR,CR,'display log test is done!',CR)
