@@ -5,6 +5,7 @@ PROGRAM class_name
 %include namespace.m
 
 %include errors.klt
+%include systemlib.c.klt
 %include display.klt
 --character codes
 %include klevccdf.kl
