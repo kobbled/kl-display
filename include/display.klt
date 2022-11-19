@@ -1,7 +1,7 @@
 %ifndef display_t
 %define display_t
 
-%INCLUDE display.c.klt
+%include display.c.klt
 
 --dimensions of TPDisplay
 %define MAX_DISPLAY_LENGTH 40
