@@ -99,6 +99,27 @@ ROUTINE new
 
   END new
 
+ROUTINE open
+  BEGIN
+    files__open(this.filename, 'RW', log_fl)
+    files__open(this.pipname, 'RW', pip_fl)
+  END open
+
+ROUTINE open_file
+  BEGIN
+    files__open(this.filename, 'RW', log_fl)
+  END open_file
+
+ROUTINE open_pipe
+  BEGIN
+    files__open(this.pipname, 'RW', pip_fl)
+  END open_pipe
+
+ROUTINE close
+  BEGIN
+    files__close(this.pipname, pip_fl)
+    files__close(this.filename, log_fl)
+  END close
 
 ROUTINE delete
   BEGIN
