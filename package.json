@@ -40,6 +40,8 @@
     {"routine" : "display__input_real", "program_name" : "userReadReal"},
     {"routine" : "printlib__init_log", "program_name" : "log_start"},
     {"routine" : "printlib__drop_log", "program_name" : "log_stop"},
+    {"routine" : "printlib__log_open", "program_name" : "log_open"},
+    {"routine" : "printlib__log_close", "program_name" : "log_close"},
     {"routine" : "printlib__log_string", "program_name" : "log_string"},
     {"routine" : "printlib__log_numreg", "program_name" : "log_numreg"},
     {"routine" : "printlib__log_posreg", "program_name" : "log_posreg"},

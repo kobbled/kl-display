@@ -72,6 +72,16 @@ ROUTINE printlib__drop_log
     tplog__delete
   END printlib__drop_log
 
+ROUTINE printlib__log_open
+  BEGIN
+    tplog__open_file
+  END printlib__log_open
+
+ROUTINE printlib__log_close
+  BEGIN
+    tplog__close
+  END printlib__log_close
+
 ROUTINE printlib__log_string
   BEGIN
     tplog__print(msg_typ, s)
