@@ -18,36 +18,43 @@ VAR
 %class usrdis('dispclass.klc','dispclass.klh')
 
 BEGIN
+  --create log file & pipe
   usrdis__new(LOG_NAME, TRUE, TRUE, TRUE)
+  --open pipe
+  usrdis__open_pipe
+
   --clear log
   usrdis__clear_file
   --print header
-  usrdis__print(HEAD, 'log file for prog:' + $SHELL_WRK.$ROUT_NAME)
+  usrdis__print_pipe(HEAD, 'log file for prog:' + $SHELL_WRK.$ROUT_NAME)
 
   --show date
-  usrdis__print(INFO, '')
+  usrdis__print_pipe(INFO, '')
 
   --Do not record date
   usrdis__show_date(FALSE)
 
   --print out string registers
-  usrdis__print(HEAD, 'String Registers!')
+  usrdis__print_pipe(HEAD, 'String Registers!')
 
   FOR i=1 TO SR_RANGE DO 
-    usrdis__print(DEBUG, display__string_reg(i, TRUE))
+    usrdis__print_pipe(DEBUG, display__string_reg(i, TRUE))
   ENDFOR
 
   --print out digital inputs
-  usrdis__print(HEAD, 'Digital Inputs!')
+  usrdis__print_pipe(HEAD, 'Digital Inputs!')
 
   FOR i=1 TO DI_RANGE DO 
-    usrdis__print(DEBUG, display__io('DI', i, TRUE))
+    usrdis__print_pipe(DEBUG, display__io('DI', i, TRUE))
   ENDFOR
 
+  --close pipe
+  usrdis__close
 
   --print pipe to log
   usrdis__write_pipe
-
+  
+  --delete log object
   usrdis__delete
 
   display__clear
