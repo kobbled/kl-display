@@ -276,7 +276,7 @@ ROUTINE print_pipe
     IF (this.filename = '') OR UNINIT(this.filename) THEN
       WRITE TPDISPLAY(str_parse(this.message, MAX_DISPLAY_LENGTH), CR)
     ELSE
-      files__write(str_parse(this.message, MAX_FILE_LENGTH), this.pipname, pip_fl)
+      files__write_line(str_parse(this.message, MAX_FILE_LENGTH), this.pipname, pip_fl)
     ENDIF
   END print_pipe
 
@@ -298,7 +298,7 @@ ROUTINE print
     IF (this.filename = '') OR UNINIT(this.filename) THEN
       WRITE TPDISPLAY(str_parse(this.message, MAX_DISPLAY_LENGTH), CR)
     ELSE
-      files__write(str_parse(this.message, MAX_FILE_LENGTH), this.filename, log_fl)
+      files__write_line(str_parse(this.message, MAX_FILE_LENGTH), this.filename, log_fl)
     ENDIF
   END print
 
